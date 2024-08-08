@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot</title>
+    <link rel="icon" href="chat bot.png"\C:\Users\Mani\price_negotiator_chatbot>
+    <style>
+        body {
+	    
+            font-family: Arial, sans-serif;
+            background : linear-gradient(to right,rgb(255, 0, 200),rgb(0, 225, 255));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 20px;
+       
+        }
+
+        .container {
+            background-color: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 360px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        h1 {
+            font-size: 1.5em;
+            color: #333;
+            margin: 0 0 15px;
+            text-align: center;
+	    color:rgb(0,0,255);
+        }
+
+        #chatbox {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            height: 300px;
+            overflow-y: auto;
+            background-color: #fafafa;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .message {
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .message.user {
+            background-color: #d1e7dd;
+            align-self: flex-end;
+            color: #000;
+        }
+        .message.user:hover{
+            background-color: #333;
+            transition: 1s;
+            cursor: pointer;
+
+        }
+
+        .message.bot {
+            background-color: #cfe2ff;
+            align-self: flex-start;
+            color: #000;
+        }
+        .message.bot:hover{
+            background-color: burlywood;
+            transition: 1s;
+            cursor: pointer;
+
+        }
+
+        #input-container {
+            display: flex;
+            align-items: center;
+
+        }
+
+        #input {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 3px solid #ddd;
+            margin-right: 10px;
+            color: #000;
+            font-weight: 100;
+            
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        #input:focus {
+            border-color: #007bff;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 8px;
+            background-color: #007bff;
+            color: #ffffff;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .message {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <button class="goback"><a>Go back</a></button>
+    <style>
+        .goback{
+            margin: 2rem;
+            margin-bottom: 30em;
+        }
+    </style>
+    <div class="container">
+        <h1>Chat With Our Chattu</h1>
+        <div id="chatbox"></div>
+        <div id="input-container">
+            <input type="text" id="input" placeholder="Type your message here...">
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+
+    <script>
+        function appendMessage(message, sender) {
+            var chatbox = document.getElementById('chatbox');
+            var div = document.createElement('div');
+            div.textContent = message;
+            div.className = 'message ' + sender;
+            chatbox.appendChild(div);
+            chatbox.scrollTop = chatbox.scrollHeight; // Auto-scroll to the bottom
+        }
+
+        function sendMessage() {
+            var input = document.getElementById('input');
+            var query = input.value;
+            input.value = '';
+
+            if (query.trim() === '') {
+                return; // Do nothing if the input is empty
+            }
+
+            appendMessage(query, 'user');
+
+            fetch('/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ query: query })
+            })
+            .then(response => response.json())
+            .then(data => {
+                appendMessage(data.response, 'bot');
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        document.getElementById('input').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+    </script>
+</body>
+
+    
+</footer>
+</html>
